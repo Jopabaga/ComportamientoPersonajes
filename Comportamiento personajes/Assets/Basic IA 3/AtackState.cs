@@ -18,15 +18,46 @@ public class AtackState : State
     public float fuerzaBala = 20f;
     public EnemyStats enemyStats;
     public DeadState dead;
+    public AlertState alert;
+    public FOV fov;
+    public bool losePlayer;
+    public int timeNoSee=0;
 
 
     void Start()
     {
         tiempoDisparos = empezarTiempoDisparos;
     }
+    public void Update()
+    {
+       
+        if(!fov.canSeePlayer)
+        {
+            timeNoSee++;
+           
+        }
+        else
+        {
+            if (timeNoSee > 0)
+            {
+                timeNoSee--;
+            }
+        }
+
+        if (timeNoSee >= 200)
+        {
+            losePlayer = true;
+        }
+
+        
+
+        
+    }
     public override State RunCurrentState()
     {
-
+        Vector3 direction = (objetivo.transform.position - enemigo.transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        enemigo.transform.rotation = Quaternion.Slerp(enemigo.transform.rotation, lookRotation, Time.deltaTime * 10);
         agente.speed = 10;
         anim = enemigo.GetComponent<Animator>();
         anim.SetFloat("speed", 0.75f);
@@ -68,6 +99,11 @@ public class AtackState : State
         if (enemyStats.isDead)
         {
             return dead;
+        }
+        else if (losePlayer)
+        {
+            losePlayer = false;
+            return alert;
         }
         else
         {

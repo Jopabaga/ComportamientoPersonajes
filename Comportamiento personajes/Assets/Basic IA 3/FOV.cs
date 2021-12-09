@@ -103,5 +103,16 @@ public class FOV : MonoBehaviour
             canSeeDeadBody = false;
         }
     }
+    public void setRadius(float rad)
+    {
+        radius = rad;
+    }
 
+    public void setAngle(float ang)
+    {
+        if (ang > 0 || ang < 360)
+        {
+            angle = ang;
+        }
+    }
 }

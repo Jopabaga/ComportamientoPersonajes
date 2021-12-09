@@ -24,26 +24,32 @@ public class PatrolState : State
     public AtackState attack;
 
     public EnemyStats enemyStats;
+   
 
     public override State RunCurrentState()
     {
-        nav.speed = 10;
+        destinoActual = 0;
+        nav.destination = destinos[destinoActual].transform.position;
+        nav.speed = 5;
         anim = enemigo.GetComponent<Animator>();
         anim.SetFloat("speed", 0.25f);
-        nav.destination = destinos[destinoActual].transform.position;
-        if (destinoActual < destinos.Length - 1)
+        if (enemigo.transform.position.x == destinos[destinoActual].transform.position.x && enemigo.transform.position.z == destinos[destinoActual].transform.position.z)
         {
-            if (this.transform.position.x == destinos[destinoActual].transform.position.x && this.transform.position.z == destinos[destinoActual].transform.position.z)
+            if (destinoActual < destinos.Length - 1)
             {
+
+
                 destinoActual++;
                 nav.destination = destinos[destinoActual].transform.position; // set next target
-            }
+
+            } else
+                 {
+                destinoActual = 0;
+                nav.destination = destinos[destinoActual].transform.position;
+            
+            }    
         }
-        else
-        {
-            destinoActual = 0;
-            nav.destination = destinos[destinoActual].transform.position;
-        }
+       
 
         State aux = changeState();
 

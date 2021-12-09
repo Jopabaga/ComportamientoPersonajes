@@ -5,75 +5,137 @@ using UnityEngine.AI;
 
 public class AlertState : State
 {
-    public GameObject objetivo;
-    public NavMeshAgent agente;
-    public float dist;
-    private Animator anim;
-    public GameObject enemigo;
-    public float retirada;
-    private float tiempoDisparos;
-    public float empezarTiempoDisparos;
-    public GameObject balaPrefab;
-    public Transform arma;
-    public float fuerzaBala = 20f;
-    public EnemyStats enemyStats;
+    public bool detectsPlayer;
+    public bool losePlayer;
+
+    public bool stopMovement;
+
+    public int detectionGrade = 0;
+    public int timeInAlert = 800;
+
+    public PatrolState patrol;
+    public AtackState attack;
     public DeadState dead;
 
+    public FOV fov;
+    public Animator anim;
+    public GameObject enemigo;
 
-    void Start()
+    public EnemyStats enemyStats;
+
+    public IABasic ia;
+
+    public LayerMask detectionLayer; //Field of view
+
+    public NavMeshAgent nav;
+    public GameObject[] destinos;
+    public int destinoActual = 0;
+
+    public void Update()
     {
-        tiempoDisparos = empezarTiempoDisparos;
-    }
-    public override State RunCurrentState()
-    {
-        Vector3 direction = (objetivo.transform.position - enemigo.transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        enemigo.transform.rotation = Quaternion.Slerp(enemigo.transform.rotation, lookRotation, Time.deltaTime * 10);
-        agente.speed = 10;
-        anim = enemigo.GetComponent<Animator>();
-        anim.SetFloat("speed", 0.75f);
-        agente.destination = objetivo.transform.position;
-        dist = Vector3.Distance(transform.position, objetivo.transform.position);
+        if (fov.canSeePlayer)
+        {
+            detectionGrade++;
+            timeInAlert ++;
+            stopMovement = true;
+            
+
+        }
+        else
+        {
+            if(!(detectionGrade <= 0))
+            {
+                detectionGrade--;
+            }
+            
+        }
+        if (detectionGrade <= 20)
+        {
+            stopMovement = false;
+           
+        }
+        if (detectionGrade >= 200)
+        {
+            detectsPlayer = true;
+        }
+        if (timeInAlert > 0) { timeInAlert--; }
         
 
-        if (dist < 20.0f)
+        if(timeInAlert <= 1)
         {
-            agente.isStopped = true;
+            losePlayer = true;
+        }
+    }
+
+    public override State RunCurrentState()
+    {  
+        
+        anim = enemigo.GetComponent<Animator>();
+        if (stopMovement)
+        {
             anim.SetFloat("speed", 0.0f);
-
-            if (tiempoDisparos <= 0)
-            {
-                GameObject bala = Instantiate(balaPrefab, arma.position, arma.rotation);
-                Rigidbody rb = bala.GetComponent<Rigidbody>();
-                rb.AddForce(arma.forward * fuerzaBala, ForceMode.Impulse);
-                tiempoDisparos = empezarTiempoDisparos;
-            }
-            else
-            {
-                tiempoDisparos -= Time.deltaTime;
-            }
-
         }
-        else if (dist > 20.0f)
-        {
+        else {
             anim.SetFloat("speed", 0.75f);
-            agente.isStopped = false;
         }
+        fov.setRadius(30);
+        fov.setAngle(120);
+
+        nav.speed = 7;
+      
+        
+        nav.destination = destinos[destinoActual].transform.position;
+        if (destinoActual < destinos.Length - 1)
+        {
+            nav.isStopped = stopMovement;
+            if (this.transform.position.x == destinos[destinoActual].transform.position.x && this.transform.position.z == destinos[destinoActual].transform.position.z)
+            {
+                destinoActual++;
+                nav.isStopped = stopMovement;
+                nav.destination = destinos[destinoActual].transform.position; // set next target
+            }
+        }
+        else
+        {
+            nav.isStopped = stopMovement;
+            destinoActual = 0;
+            nav.destination = destinos[destinoActual].transform.position;
+        }
+
+
 
         State aux = changeState();
-
         return aux;
     }
 
     private State changeState()
     {
-        if (enemyStats.isDead)
+        if (losePlayer)
+        {
+            fov.setRadius(8);
+            fov.setAngle(80);
+            //cambiar color y tamaño de luz
+            losePlayer = false;
+            return patrol;
+        }
+        else if (enemyStats.isDead)
         {
             return dead;
+        }
+        else if (enemyStats.hurt || detectsPlayer)
+        {
+            detectsPlayer = false;
+            return attack;
         }
         else
         {
             return this;
         }
     }
+
+    public void LosePlayerAction()
+    {
+        losePlayer = true;
+    }
 }
+

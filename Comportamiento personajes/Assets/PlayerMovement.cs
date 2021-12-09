@@ -34,6 +34,16 @@ public class PlayerMovement : MonoBehaviour
             stats.hp = stats.hp - 1;
             Debug.Log(stats.hp);
         }
+       
+
+    }
+    void OnTriggerEnter(Collider target)
+    {
+        if (target.gameObject.tag.Equals("final") == true)
+        {
+
+            SceneManager.LoadScene(2);
+        }
     }
 
     private void Update()
