@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 249841b09b162424882bc5db0a4c19b4, type: 2}
 --- !u!1001 &22415145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2073,6 +2073,36 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9051238300485817969, guid: 2f6c4572e07a60b43b00e1c4f489a806, type: 3}
   m_PrefabInstance: {fileID: 360275173}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &372064032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 372064033}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &372064033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372064032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 151.6, y: 2.08, z: 6.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &385390417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3479,6 +3509,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ground_01
       objectReference: {fileID: 0}
+    - target: {fileID: 916917378494744782, guid: 98f5378049f9b5745a77677f581b32b1, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1563464522814601850, guid: 98f5378049f9b5745a77677f581b32b1, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -3714,7 +3748,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400166, guid: 3d06f9e13e57b434dbbb7e7b64c158e1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 168.28
+      value: 159.95
       objectReference: {fileID: 0}
     - target: {fileID: 400166, guid: 3d06f9e13e57b434dbbb7e7b64c158e1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3722,7 +3756,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400166, guid: 3d06f9e13e57b434dbbb7e7b64c158e1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.69
+      value: 85.75
       objectReference: {fileID: 0}
     - target: {fileID: 400166, guid: 3d06f9e13e57b434dbbb7e7b64c158e1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -7323,36 +7357,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1107893806}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9e2d6041f7231340a3ad42334d2856d, type: 3}
+  m_Script: {fileID: 11500000, guid: 64ef287799026b34685fcbcf421c409a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPerformingAction: 0
-  enemyAttacks: []
-  currentAttack: {fileID: 0}
-  detectionRadius: 20
-  maxDetectionAngle: 50
-  minDetectionAngle: -50
-  currentRecoveryTime: 0
---- !u!114 &1107893811
-MonoBehaviour:
+  nav: {fileID: 1107893814}
+  goal: {fileID: 1178642298}
+--- !u!65 &1107893811
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1107893806}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ea500f5b64c0ce41a243418e5ed173f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyRigidBody: {fileID: 1107893812}
-  currentTarget: {fileID: 0}
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  distanceFromTarget: 0
-  stoppingDistance: 20
-  rotationSpeed: 15
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.7355852, z: 1}
+  m_Center: {x: 0, y: 0.6101234, z: 0}
 --- !u!54 &1107893812
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7365,23 +7387,10 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!135 &1107893813
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107893806}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.9253475
-  m_Center: {x: -0.8664961, y: -0.1293388, z: -0.000000011781276}
 --- !u!195 &1107893814
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -7391,7 +7400,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1107893806}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
