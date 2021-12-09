@@ -32,7 +32,8 @@ public class PlayerMovement : MonoBehaviour
     {
         isGrounded = Physics.CheckSphere(transform.position, distanciaSuelo, groundMask);
         float moveZ = Input.GetAxis("Vertical");
-        moveDriection = new Vector3(0, 0, moveZ);
+        float moveX = Input.GetAxis("Horizontal");
+        moveDriection = new Vector3(moveX, 0, moveZ);
         moveDriection = transform.TransformDirection(moveDriection);
         
         if(moveDriection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift))
