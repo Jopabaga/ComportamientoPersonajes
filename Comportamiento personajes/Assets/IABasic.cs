@@ -5,18 +5,47 @@ using UnityEngine.AI;
 
 public class IABasic : MonoBehaviour
 {
+    public State currentState;
+
 
     public NavMeshAgent nav;
-    public GameObject goal;
-    // Start is called before the first frame update
-    void Start()
+
+
+    public SoldierStats currentTarget;
+
+    [Header("A.I. Properties")]
+    public float detectionRadius = 20;
+
+    //The higher or lower the angles are, the greater detection
+    public float maxDetectionAngle = 50;
+    public float minDetectionAngle = -50;
+
+    private void Awake()
     {
-        
+        currentTarget = GetComponent<SoldierStats>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        nav.destination = goal.transform.position;
+        HandleCurrentAction();
+    }
+
+    public void HandleCurrentAction()
+    {
+        if (currentState != null)
+        {
+            State next = currentState.RunCurrentState();
+
+            if (next != null)
+            {
+                SwitchToNextState(next);
+            }
+        }
+    }
+
+    private void SwitchToNextState(State state)
+    {
+        currentState = state;
     }
 }
