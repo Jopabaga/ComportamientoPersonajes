@@ -7,6 +7,12 @@ public class PatrolState : State
 {
     public IABasic ia;
 
+    public FOV fov;
+    private Animator anim;
+    public GameObject enemigo;
+
+    
+
     public LayerMask detectionLayer; //Field of view
 
     public NavMeshAgent nav;
@@ -17,6 +23,9 @@ public class PatrolState : State
 
     public override State RunCurrentState()
     {
+        nav.speed = 10;
+        anim = enemigo.GetComponent<Animator>();
+        anim.SetFloat("speed", 0.25f);
         nav.destination = destinos[destinoActual].transform.position;
         if (destinoActual < destinos.Length - 1)
         {
@@ -40,25 +49,7 @@ public class PatrolState : State
 
     private State detectarMov()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, ia.detectionRadius, detectionLayer);
-
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            SoldierStats soldierStats = colliders[i].transform.GetComponent<SoldierStats>();
-
-            if (soldierStats != null)
-            {
-                Vector3 targetDirection = soldierStats.transform.position - transform.position;
-                float viewableAngle = Vector3.Angle(targetDirection, transform.forward);
-
-                if (viewableAngle > ia.minDetectionAngle && viewableAngle < ia.maxDetectionAngle)
-                {
-                    ia.currentTarget = soldierStats;
-                }
-            }
-        }
-
-        if (ia.currentTarget != null)
+        if (fov.canSeePlayer)
         {
             return alert;
         }
