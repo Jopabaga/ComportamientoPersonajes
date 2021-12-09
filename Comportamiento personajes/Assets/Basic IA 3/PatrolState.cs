@@ -11,7 +11,7 @@ public class PatrolState : State
     private Animator anim;
     public GameObject enemigo;
 
-    
+
 
     public LayerMask detectionLayer; //Field of view
 
@@ -20,6 +20,10 @@ public class PatrolState : State
     public int destinoActual = 0;
 
     public AlertState alert;
+    public DeadState dead;
+    public AtackState attack;
+
+    public EnemyStats enemyStats;
 
     public override State RunCurrentState()
     {
@@ -41,17 +45,26 @@ public class PatrolState : State
             nav.destination = destinos[destinoActual].transform.position;
         }
 
-        State aux = detectarMov();
+        State aux = changeState();
 
         return aux;
 
     }
+    
 
-    private State detectarMov()
+    private State changeState()
     {
-        if (fov.canSeePlayer)
+        if (fov.canSeePlayer || fov.canSeeDeadBody)
         {
             return alert;
+        }
+        else if (enemyStats.isDead)
+        {
+            return dead;
+        }
+        else if (enemyStats.hurt)
+        {
+            return attack;
         }
         else
         {

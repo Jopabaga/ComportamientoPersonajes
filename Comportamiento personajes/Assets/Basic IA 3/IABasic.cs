@@ -11,7 +11,7 @@ public class IABasic : MonoBehaviour
     public NavMeshAgent nav;
 
 
-    public SoldierStats currentTarget;
+    public PlayerStats currentTarget;
 
     [Header("A.I. Properties")]
     public float detectionRadius = 20;
@@ -22,7 +22,7 @@ public class IABasic : MonoBehaviour
 
     private void Awake()
     {
-        currentTarget = GetComponent<SoldierStats>();
+        currentTarget = GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame

@@ -9,11 +9,14 @@ public class FOV : MonoBehaviour
     public float angle;
 
     public GameObject playerRef;
+    public GameObject deadEnemy;
 
     public LayerMask playerMask;
     public LayerMask obstructionMask;
+    public LayerMask deadMask;
 
     public bool canSeePlayer;
+    public bool canSeeDeadBody;
 
     public void Start()
     {
@@ -28,11 +31,12 @@ public class FOV : MonoBehaviour
         while (true)
         {
             yield return wait;
-            FOVCheck();
+            FOVCheckPlayer();
+            FOVCheckDeadEnemy();
         }
     }
 
-    private void FOVCheck()
+    private void FOVCheckPlayer()
     {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, playerMask);
 
@@ -63,4 +67,38 @@ public class FOV : MonoBehaviour
             canSeePlayer = false;
         }
     }
+    private void FOVCheckDeadEnemy()
+    {
+        deadEnemy = GameObject.FindGameObjectWithTag("Dead");
+        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, deadMask);
+
+        if (rangeChecks.Length != 0)
+        {
+            Transform target = rangeChecks[0].transform;
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+
+            if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                {
+                    canSeeDeadBody = true;
+                }
+                else
+                {
+                    canSeeDeadBody = false;
+                }
+            }
+            else
+            {
+                canSeeDeadBody = false;
+            }
+        }
+        else if (canSeeDeadBody)
+        {
+            canSeeDeadBody = false;
+        }
+    }
+
 }
