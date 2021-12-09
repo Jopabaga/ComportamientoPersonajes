@@ -9,7 +9,7 @@ public class EnemyStats : CharacterStats
 
     private void Start()
     {
-        maxHealth = 1;
+        maxHealth = 5;
         hp = maxHealth;
         auxHealth = hp;
 
@@ -21,7 +21,8 @@ public class EnemyStats : CharacterStats
     {
         CheckHealth();
         checkIfHurt();
-        Debug.Log(isDead);
+        
+       
     }
 
     public void checkIfHurt()

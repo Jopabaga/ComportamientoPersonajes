@@ -22,6 +22,7 @@ public class AtackState : State
     public FOV fov;
     public bool losePlayer;
     public int timeNoSee=0;
+    public Light linterna;
 
 
     void Start()
@@ -55,6 +56,7 @@ public class AtackState : State
     }
     public override State RunCurrentState()
     {
+        linterna.color = Color.red;
         Vector3 direction = (objetivo.transform.position - enemigo.transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         enemigo.transform.rotation = Quaternion.Slerp(enemigo.transform.rotation, lookRotation, Time.deltaTime * 10);
@@ -103,6 +105,8 @@ public class AtackState : State
         else if (losePlayer)
         {
             losePlayer = false;
+            alert.timeInAlert = 800;
+            alert.detectionGrade = 0;
             return alert;
         }
         else

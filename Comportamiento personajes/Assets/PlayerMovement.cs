@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void OnCollisionEnter(Collision target)
     {
-        if (target.gameObject.tag.Equals("bala") == true)
+        if (target.gameObject.tag.Equals("bala2") == true)
         {
 
             stats.hp = stats.hp - 1;

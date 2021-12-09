@@ -11,51 +11,49 @@ public class PatrolState : State
     private Animator anim;
     public GameObject enemigo;
 
-
+    public Light linterna;
 
     public LayerMask detectionLayer; //Field of view
 
     public NavMeshAgent nav;
     public GameObject[] destinos;
-    public int destinoActual = 0;
+    public int destinoActual ;
 
     public AlertState alert;
     public DeadState dead;
     public AtackState attack;
 
     public EnemyStats enemyStats;
-   
+
 
     public override State RunCurrentState()
     {
-        destinoActual = 0;
+        linterna.color = Color.white;
         nav.destination = destinos[destinoActual].transform.position;
         nav.speed = 5;
         anim = enemigo.GetComponent<Animator>();
         anim.SetFloat("speed", 0.25f);
-        if (enemigo.transform.position.x == destinos[destinoActual].transform.position.x && enemigo.transform.position.z == destinos[destinoActual].transform.position.z)
+        if (this.transform.position.x == destinos[destinoActual].transform.position.x && this.transform.position.z == destinos[destinoActual].transform.position.z)
         {
             if (destinoActual < destinos.Length - 1)
             {
-
-
                 destinoActual++;
-                nav.destination = destinos[destinoActual].transform.position; // set next target
 
-            } else
-                 {
-                destinoActual = 0;
-                nav.destination = destinos[destinoActual].transform.position;
-            
-            }    
+
+            }
+            else { destinoActual = 0; }
+
+            nav.SetDestination(destinos[destinoActual].transform.position);
         }
-       
-
-        State aux = changeState();
+         State aux = changeState();
 
         return aux;
+     } 
+        
+       
 
-    }
+      
+    
     
 
     private State changeState()
@@ -70,6 +68,7 @@ public class PatrolState : State
         }
         else if (enemyStats.hurt)
         {
+            enemyStats.hurt = false;
             return attack;
         }
         else

@@ -6,7 +6,7 @@ public class PlayerStats : CharacterStats
 {
     private void Start()
     {
-        maxHealth = 10;
+        maxHealth=1;
         hp = maxHealth;
 
         maxAmmo = 10;

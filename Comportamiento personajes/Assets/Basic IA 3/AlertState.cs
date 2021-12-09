@@ -10,8 +10,8 @@ public class AlertState : State
 
     public bool stopMovement;
 
-    public int detectionGrade = 0;
-    public int timeInAlert = 800;
+    public int detectionGrade ;
+    public int timeInAlert;
 
     public PatrolState patrol;
     public AtackState attack;
@@ -22,15 +22,21 @@ public class AlertState : State
     public GameObject enemigo;
 
     public EnemyStats enemyStats;
+    public Light linterna;
 
     public IABasic ia;
 
     public LayerMask detectionLayer; //Field of view
 
     public NavMeshAgent nav;
-    public GameObject[] destinos;
+    public GameObject objetivo;
     public int destinoActual = 0;
-
+    
+    public void Start()
+    {
+        detectionGrade = 0;
+        timeInAlert = 800;
+    }
     public void Update()
     {
         if (fov.canSeePlayer)
@@ -54,7 +60,7 @@ public class AlertState : State
             stopMovement = false;
            
         }
-        if (detectionGrade >= 200)
+        if (detectionGrade >= 50)
         {
             detectsPlayer = true;
         }
@@ -68,8 +74,9 @@ public class AlertState : State
     }
 
     public override State RunCurrentState()
-    {  
-        
+    {
+
+        linterna.color = Color.yellow;
         anim = enemigo.GetComponent<Animator>();
         if (stopMovement)
         {
@@ -78,29 +85,13 @@ public class AlertState : State
         else {
             anim.SetFloat("speed", 0.75f);
         }
-        fov.setRadius(30);
-        fov.setAngle(120);
+        fov.setRadius(45);
+        fov.setAngle(150);
 
         nav.speed = 7;
       
-        
-        nav.destination = destinos[destinoActual].transform.position;
-        if (destinoActual < destinos.Length - 1)
-        {
-            nav.isStopped = stopMovement;
-            if (this.transform.position.x == destinos[destinoActual].transform.position.x && this.transform.position.z == destinos[destinoActual].transform.position.z)
-            {
-                destinoActual++;
-                nav.isStopped = stopMovement;
-                nav.destination = destinos[destinoActual].transform.position; // set next target
-            }
-        }
-        else
-        {
-            nav.isStopped = stopMovement;
-            destinoActual = 0;
-            nav.destination = destinos[destinoActual].transform.position;
-        }
+        nav.isStopped = stopMovement;
+        nav.destination = objetivo.transform.position;
 
 
 
@@ -112,10 +103,12 @@ public class AlertState : State
     {
         if (losePlayer)
         {
-            fov.setRadius(8);
-            fov.setAngle(80);
+            fov.setRadius(25);
+            fov.setAngle(150);
             //cambiar color y tamaño de luz
             losePlayer = false;
+            timeInAlert = 800;
+            patrol.destinoActual = 0;
             return patrol;
         }
         else if (enemyStats.isDead)
@@ -124,7 +117,9 @@ public class AlertState : State
         }
         else if (enemyStats.hurt || detectsPlayer)
         {
+            enemyStats.hurt = false;
             detectsPlayer = false;
+            detectionGrade = 0;
             return attack;
         }
         else
