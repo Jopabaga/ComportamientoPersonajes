@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Jugador
   - Dead
+  - bala
   layers:
   - Default
   - TransparentFX

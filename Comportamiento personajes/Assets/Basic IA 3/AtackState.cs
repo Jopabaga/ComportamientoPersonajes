@@ -8,7 +8,7 @@ public class AtackState : State
     public GameObject objetivo;
     public NavMeshAgent agente;
     public float dist;
-    private Animator anim;
+    public Animator anim;
     public GameObject enemigo;
     public float retirada;
     private float tiempoDisparos;
@@ -16,6 +16,8 @@ public class AtackState : State
     public GameObject balaPrefab;
     public Transform arma;
     public float fuerzaBala = 20f;
+    public EnemyStats enemyStats;
+    public DeadState dead;
 
 
     void Start()
@@ -30,7 +32,7 @@ public class AtackState : State
         anim.SetFloat("speed", 0.75f);
         agente.destination = objetivo.transform.position;
         dist = Vector3.Distance(transform.position, objetivo.transform.position);
-        Debug.Log(dist);
+        
 
         if (dist < 20.0f)
         {
@@ -56,6 +58,20 @@ public class AtackState : State
             agente.isStopped = false;
         }
 
-        return this;
+        State aux = changeState();
+
+        return aux;
+    }
+
+    private State changeState()
+    {
+        if (enemyStats.isDead)
+        {
+            return dead;
+        }
+        else
+        {
+            return this;
+        }
     }
 }

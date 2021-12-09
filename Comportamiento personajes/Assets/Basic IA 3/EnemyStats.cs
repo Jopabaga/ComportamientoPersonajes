@@ -1,3 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 public class EnemyStats : CharacterStats
 {
     public bool hurt;
@@ -16,7 +19,9 @@ public class EnemyStats : CharacterStats
 
     public void Update()
     {
+        CheckHealth();
         checkIfHurt();
+        Debug.Log(isDead);
     }
 
     public void checkIfHurt()

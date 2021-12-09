@@ -12,4 +12,8 @@ public class PlayerStats : CharacterStats
         maxAmmo = 10;
         ammo = maxAmmo;
     }
+    void Update()
+    {
+        CheckHealth();
+    }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,15 +19,31 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private Animator anim;
 
+    public PlayerStats stats;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
     }
+    void OnCollisionEnter(Collision target)
+    {
+        if (target.gameObject.tag.Equals("bala") == true)
+        {
+
+            stats.hp = stats.hp - 1;
+            Debug.Log(stats.hp);
+        }
+    }
 
     private void Update()
     {
         Move();
+        if (stats.isDead)
+        {
+            anim.SetFloat("speed", 1.0f);
+            SceneManager.LoadScene(0);
+        }
     }
     private void Move()
     {

@@ -15,6 +15,8 @@ public class FOV : MonoBehaviour
     public LayerMask obstructionMask;
     public LayerMask deadMask;
 
+   
+
     public bool canSeePlayer;
     public bool canSeeDeadBody;
 
@@ -51,6 +53,7 @@ public class FOV : MonoBehaviour
                 
                 if(!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
+                   
                     canSeePlayer = true;
                 }
                 else
